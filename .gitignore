@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+
+config/config.json
+
+data/*
+!data/aria.ico
