@@ -5,7 +5,7 @@ from os import remove
 
 import aiofiles
 import aiohttp
-from win10toast import ToastNotifier
+from plyer import notification
 
 from aria.Config import Config
 from PIL import Image
@@ -20,7 +20,6 @@ class Aria():
         self.loop = asyncio.get_event_loop()
         self.session = None
         self.client = None
-        self.toaster = ToastNotifier()
         
         self.loop.run_until_complete(self.setup())
 
@@ -81,11 +80,11 @@ class Aria():
         if not glob.glob(fr'{song_uri}.img.ico') and icon_url:
             if await self.get_thumbnail(song_uri, icon_url):
                 self.gen_icon(fr'data\{song_uri}.img')
-                remove(fr'data/{song_uri}.img')
+                remove(fr'data\{song_uri}.img')
             else:
                 icon_path = r'data\aria.ico' # default icon
 
-        self.toaster.show_toast(title=title, msg=message, icon_path=icon_path, threaded=True)
+        notification.notify(title=title, message=message, app_name='aria-music', app_icon=icon_path)
 
     async def get_thumbnail(self, song_uri, image_url):
         async with self.session.get(image_url) as resp:
