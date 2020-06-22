@@ -75,21 +75,21 @@ class Aria():
 
         song_uri = data['uri'].replace(':', '-').replace('/', '-').replace('?', '-')
         icon_url = data['thumbnail_small']
-        icon_path = fr'data\{song_uri}.img.ico' if icon_url else r'data\aria.ico'
+        icon_path = fr'data/{song_uri}.img.ico' if icon_url else r'data/aria.ico'
 
         if not glob.glob(fr'{song_uri}.img.ico') and icon_url:
             if await self.get_thumbnail(song_uri, icon_url):
-                self.gen_icon(fr'data\{song_uri}.img')
-                remove(fr'data\{song_uri}.img')
+                self.gen_icon(fr'data/{song_uri}.img')
+                remove(fr'data/{song_uri}.img')
             else:
-                icon_path = r'data\aria.ico' # default icon
+                icon_path = r'data/aria.ico' # default icon
 
         notification.notify(title=title, message=message, app_name='aria-music', app_icon=icon_path)
 
     async def get_thumbnail(self, song_uri, image_url):
         async with self.session.get(image_url) as resp:
             if resp.status == 200:
-                f = await aiofiles.open(fr'data\{song_uri}.img', mode='wb')
+                f = await aiofiles.open(fr'data/{song_uri}.img', mode='wb')
                 await f.write(await resp.read())
                 await f.close()
                 return True
